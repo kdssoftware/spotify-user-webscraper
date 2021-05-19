@@ -1,0 +1,15 @@
+{
+  "name": "spotify-user-webscraper",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:snakehead007/spotify-user-webscraper.git",
+  "author": "karel <snakehead007@pm.ne>",
+  "scripts": {
+    "build": "tsc index.ts",
+    "start" : "tsc && node dist/index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^4.2.4"
+  }
+}
