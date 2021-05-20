@@ -1,9 +1,11 @@
 import dotenv from "dotenv"
 import {connect} from "./utils/db";
 import puppeteer from 'puppeteer';
+import { isFunctionDeclaration } from "typescript";
 
 dotenv.config();
 const start = async()=>{
+  //configuration
   console.log("browser starting...");
   const browser = await puppeteer.launch({headless:true});
   console.log("browser started");
@@ -13,33 +15,50 @@ const start = async()=>{
   console.log("database getting collections...");
   const users = db.collection("users");
   const infoCollection = await db.collection("info");
+  const badUsers = db.collection("badUsers");
   const info = await infoCollection.findOne({});
   let currentUsernameScraped = info.lastUsernameScraped;
   console.log("database received collections");
+
+  //looping to find usernames
   while(true){
     try{
       const page = await browser.newPage();
-      const found: {username:string|number,profilename:string,followers?:number,following?:number} = await searchNextUser(currentUsernameScraped,page);
+      const found = await searchNextUser(currentUsernameScraped,page);
       //found
-      users.insertOne(found);
+      console.log("found username "+found.username);
+      const oldUser = await users.findOne({username:found.username});
+      if(oldUser){
+        users.replaceOne(oldUser,found);
+      }else{
+        users.insertOne(found);
+      }
     }catch(e){
       //not found
-      console.log("not found",e);
+      const newBadUser = {
+        lastUpdated:Date.now(),
+        username:currentUsernameScraped
+      };
+      const oldBadUser = await badUsers.findOne({username:currentUsernameScraped});
+      if(oldBadUser){
+        badUsers.replaceOne(oldBadUser, newBadUser);
+      }else{
+        badUsers.insertOne(newBadUser);
+      }
     }finally{
       //update database info
-      infoCollection.updateOne({}, { $inc: { lastUsernameScraped: 1 } });
-      currentUsernameScraped++;
+      infoCollection.replaceOne({}, { lastUsernameScraped: increaseUsername(currentUsernameScraped) });
+      currentUsernameScraped = increaseUsername(currentUsernameScraped);
     }
   }
 };
 
+//search given username
 const searchNextUser = (username:string|number, page:puppeteer.Page):Promise<any>=>{
   return new Promise(async(resolve,reject)=>{
-
     const timer = setTimeout(() => {
       reject(new Error(`Promise timed out after 5000 ms`));
   }, 5000);
-
     console.log("searching username "+username);
     await page.goto('https://open.spotify.com/user/'+username);
     //profile name
@@ -73,12 +92,41 @@ const searchNextUser = (username:string|number, page:puppeteer.Page):Promise<any
     }catch(e){};
     page.close();
     resolve({
-      username,
+      username:String(username),
       following,
       profilename,
-      followers
+      followers,
+      lastUpdated:Date.now(),
+      link:"https://open.spotify.com/user/"+username
     });
 })}
 
+
+const increaseUsername = (username:string) =>{
+  const chars:string[] = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','%','_','-','&','*',')','(','=',',','^','@','~',':','>','<','|',']','[','+','$','!'];
+  /**
+   * 0 -> = -> 00 -> == -> 000 -> === -> .......
+   */
+  //example test123 => ['t', 'e', 's','t', '1', '2','3']
+  username = String(username); 
+  let usr : string[] = username.split('');
+  try{
+    usr.forEach((char,index) => {
+      //check if char is last character
+      if(char===chars[chars.length-1]){
+        //check if last character in array
+        if(index===usr.length-1){
+          usr.unshift(chars[0]);
+          throw "break";
+        }
+      }
+      else{
+        usr[index] = chars[chars.indexOf(char)+1];
+        throw "break";
+      }
+    });
+  }catch(e){}
+  return usr.join("");
+}
 
 start();
