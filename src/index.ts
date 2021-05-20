@@ -1,7 +1,6 @@
 import dotenv from "dotenv"
 import {connect} from "./utils/db";
 import puppeteer from 'puppeteer';
-import { isFunctionDeclaration } from "typescript";
 
 dotenv.config();
 const start = async()=>{
@@ -107,24 +106,33 @@ const increaseUsername = (username:string) =>{
   /**
    * 0 -> = -> 00 -> == -> 000 -> === -> .......
    */
-  //example test123 => ['t', 'e', 's','t', '1', '2','3']
-  username = String(username); 
+  //example test123 => ['t', 'e', 's','t', '1', '!','!']
+  /**10,11,12,...18,19,20 */
+  username = String(username); 603
   let usr : string[] = username.split('');
   try{
-    usr.forEach((char,index) => {
-      //check if char is last character
-      if(char===chars[chars.length-1]){
-        //check if last character in array
-        if(index===usr.length-1){
-          usr.unshift(chars[0]);
-          throw "break";
-        }
-      }
-      else{
-        usr[index] = chars[chars.indexOf(char)+1];
+    let countOfEndChars = usr.filter(x=>x===chars[chars.length-1]);
+    //  !!!!
+    // 00000
+    if(countOfEndChars.length==usr.length){
+      usr = usr.map(x=>chars[0]);
+      usr.push(chars[0]);
+      throw "break";
+    }
+    // 123!!
+    // 12500
+    // 12501
+    let reverseUsr = usr.reverse();
+    reverseUsr.forEach((char,index) => {
+      if(char===chars[chars.length-1]){ // c == !
+        reverseUsr[index] = chars[0];
+      }else{
+        reverseUsr[index] = chars[chars.indexOf(char)+1];
+        reverseUsr.reverse();
         throw "break";
       }
     });
+
   }catch(e){}
   return usr.join("");
 }
