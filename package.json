@@ -5,11 +5,16 @@
   "repository": "git@github.com:snakehead007/spotify-user-webscraper.git",
   "author": "karel <snakehead007@pm.ne>",
   "scripts": {
-    "build": "tsc index.ts",
-    "start" : "tsc && node dist/index.js"
+    "build": "tsc src/index.ts",
+    "start": "tsc && node dist/index.js"
   },
   "license": "MIT",
   "dependencies": {
+    "@types/mongodb": "^3.6.14",
+    "@types/puppeteer": "^5.4.3",
+    "dotenv": "^9.0.2",
+    "mongodb": "^3.6.7",
+    "puppeteer": "^9.1.1",
     "typescript": "^4.2.4"
   }
 }

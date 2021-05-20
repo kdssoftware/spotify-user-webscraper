@@ -1,7 +1,26 @@
 # spotify-user-webscraper
 Gather info about potionally all spotify users
 
-- [ ] connect a MongoDB database
-- [ ] find and save all spotify users using link open.spotify.com/user/[sequence of characters here]
-- [ ] create script to gather all data from spotify users.
+- [x] connect a MongoDB database
+- [x] find and save all spotify users using link open.spotify.com/user/[sequence of characters here]
+- [x] create script to gather all data from spotify users.
 - [ ] Analyse data
+
+---
+
+info
+```
+XPaths:
+profile name = /html/body/div[3]/div/div[2]/div[3]/main/div[2]/div[2]/div/div/div[2]/section/div/div[1]/div[5]/span/h1
+Followers = /html/body/div[3]/div/div[2]/div[3]/main/div[2]/div[2]/div/div/div[2]/section/div/div[1]/div[5]/div/span[1]/a
+Following = /html/body/div[3]/div/div[2]/div[3]/main/div[2]/div[2]/div/div/div[2]/section/div/div[1]/div[5]/div/span[2]/a
+````
+And username is in the url.
+
+Old default usernames are 11 numbers;
+    notes: starts always with 1
+new default usernames are 25 characters e.g. : '01ztsti0lmi5yvw9i6u663ydk'
+    notes: starts always with 0
+
+search of usernames:
+    1. find all old default usernames;
