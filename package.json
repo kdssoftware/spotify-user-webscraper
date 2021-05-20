@@ -6,7 +6,8 @@
   "author": "karel <snakehead007@pm.ne>",
   "scripts": {
     "build": "tsc src/index.ts",
-    "start": "tsc && node dist/index.js"
+    "start": "tsc && node dist/index.js",
+    "setup": "tsc && node dist/setup.js"
   },
   "license": "MIT",
   "dependencies": {

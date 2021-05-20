@@ -47,7 +47,7 @@ const start = async()=>{
       }
     }finally{
       //update database info
-      infoCollection.replaceOne({}, { lastUsernameScraped: increaseUsername(currentUsernameScraped) });
+      infoCollection.replaceOne({}, { lastUsernameScraped: increaseUsername(currentUsernameScraped) , lastUpdated:Date.now()});
       currentUsernameScraped = increaseUsername(currentUsernameScraped);
     }
   }
