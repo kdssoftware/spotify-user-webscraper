@@ -1,7 +1,7 @@
 # spotify-user-webscraper
 Gather info about potionally all spotify users
 
-(Our MongoDB database)[https://cloud.mongodb.com/freemonitoring/cluster/7X4WQA33PJN3A234F5WT5B5I53O6TU4I]
+[Our MongoDB database](https://cloud.mongodb.com/freemonitoring/cluster/7X4WQA33PJN3A234F5WT5B5I53O6TU4I)
 
 - [x] connect a MongoDB database
 - [x] find and save all spotify users using link open.spotify.com/user/[sequence of characters here]
@@ -10,6 +10,7 @@ Gather info about potionally all spotify users
 - [ ] create a docker composer
 - [ ] Analyse data
 - [ ] share all the data
+
 
 ---
 
