@@ -1,4 +1,5 @@
 import dotenv from "dotenv"
+dotenv.config();
 import {connect} from "./utils/db";
 (async()=>{
     console.log("connecting to database...")
