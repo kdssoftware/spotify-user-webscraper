@@ -6,7 +6,7 @@ dotenv.config();
 const start = async()=>{
   //configuration
   console.log("browser starting...");
-  const browser = await puppeteer.launch({headless:false});
+  const browser = await puppeteer.launch({headless:true});
   console.log("browser started");
   console.log("database connecting...");
   const db = await connect();
